@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dosage Calculator Based on Body Weight</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dosage Calculator Based on Body Weight</h1>
+        <div class="form-group">
+            <label for="weight">Body Weight:</label>
+            <input type="number" id="weight" placeholder="Enter body weight">
+            <select id="unit">
+                <option value="kg">kg</option>
+                <option value="lb">lb</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="dosage">Dosage per kg (mg/kg):</label>
+            <input type="number" id="dosage" placeholder="Enter dosage per kg">
+        </div>
+        <div class="form-group">
+            <label for="frequency">Frequency:</label>
+            <select id="frequency">
+                <option value="1">Once a day</option>
+                <option value="2">Twice a day</option>
+                <option value="3">Three times a day</option>
+                <option value="4">Four times a day</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="concentration">Concentration:</label>
+            <input type="number" id="concentration" placeholder="Enter concentration">
+            <select id="concentrationUnit">
+                <option value="mg/ml">mg/ml</option>
+                <option value="mg/5ml">mg/5ml</option>
+            </select>
+        </div>
+        <button onclick="calculateDosage()">Calculate</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateDosage() {
+            var weight = parseFloat(document.getElementById("weight").value);
+            var unit = document.getElementById("unit").value;
+            var dosage = parseFloat(document.getElementById("dosage").value);
+            var frequency = parseInt(document.getElementById("frequency").value);
+            var concentration = parseFloat(document.getElementById("concentration").value);
+            var concentrationUnit = document.getElementById("concentrationUnit").value;
+
+            if (weight && dosage && concentration) {
+                // Convert weight to kg if in lb
+                if (unit === "lb") {
+                    weight = weight * 0.453592; // 1 lb = 0.453592 kg
+                }
+
+                // Calculate total dosage
+                var totalDosage = weight * dosage * frequency;
+
+                // Adjust concentration based on unit
+                var totalVolume;
+                if (concentrationUnit === "mg/ml") {
+                    // Calculate total volume for mg/ml
+                    totalVolume = totalDosage / concentration;
+                } else {
+                    // Calculate total volume for mg/5ml
+                    totalVolume = totalDosage / (concentration / 5); // divide by (concentration / 5) to get mg per 5ml
+                }
+
+                // Calculate ml per dose
+                var mlPerDose = totalVolume / frequency;
+
+                document.getElementById("result").innerHTML = "<p>Recommended Dosage: " + totalDosage.toFixed(2) + " mg</p>";
+                document.getElementById("result").innerHTML += "<p>Total Volume: " + totalVolume.toFixed(2) + " ml</p>";
+                document.getElementById("result").innerHTML += "<p>Volume per Dose: " + mlPerDose.toFixed(2) + " ml</p>";
+            } else {
+                document.getElementById("result").textContent = "Please enter valid values for all fields.";
+            }
+        }
+    </script>
+</body>
+</html>
